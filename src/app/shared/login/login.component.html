@@ -1,0 +1,49 @@
+<div [formGroup]="loginForm">
+  <input type="text" placeholder="mobile" formControlName="primaryMobile">
+  <input type="text" placeholder="password" formControlName="password">
+</div>
+<button class="btn btn-primary ms-2" (click)="businessLogin()">Login</button>
+<p><a routerLink="/register">Not registered yet?</a></p>
+
+<button type="button" class="btn btn-info" (click)="openModal(customerLoginModal)">
+  Customer Login
+</button>
+
+<!-- Customer Login Modal -->
+<ng-template #customerLoginModal>
+  <div class="modal-header">
+    <h4 class="modal-title pull-left">Customer Login</h4>
+    <button type="button" class="btn-close close pull-right" aria-label="Close" (click)="modalRef?.hide()">
+      <span aria-hidden="true" class="visually-hidden">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div [formGroup]="customerLoginForm">
+      <input type="text" class="form-control mb-2" placeholder="Mobile" formControlName="mobile">
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="modalRef?.hide()">Cancel</button>
+    <button type="button" class="btn btn-primary" (click)="customerLogin(createPwdModal)">Login</button>
+  </div>
+</ng-template>
+
+
+<!-- Create password modal -->
+<ng-template #createPwdModal>
+  <div class="modal-header">
+    <h4 class="modal-title pull-left">Modal</h4>
+    <button type="button" class="btn-close close pull-right" aria-label="Close" (click)="modalRef?.hide()">
+      <span aria-hidden="true" class="visually-hidden">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div [formGroup]="customerPwdForm">
+      <input type="password" class="form-control mb-2" placeholder="Password" formControlName="password">
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="modalRef?.hide()">Cancel</button>
+    <button type="button" class="btn btn-primary" (click)="createPassword()">Login</button>
+  </div>
+</ng-template>
