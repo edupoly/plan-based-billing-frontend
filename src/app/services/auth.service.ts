@@ -5,8 +5,9 @@ import { Injectable } from '@angular/core';
   providedIn: 'root',
 })
 export class AuthService {
-  dbUrl:any = 'http://localhost:4600';
+  dbUrl:any = 'https://plan-based-billing-backend.onrender.com';
   currentBusiness:any|null = null;
+  currentCustomer:any|null = null;
   constructor(public http:HttpClient) {}
 
   registerBusiness(newBusiness:any){

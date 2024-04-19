@@ -3,7 +3,6 @@ import { Component, OnInit,TemplateRef  } from '@angular/core';
 import { AuthService } from 'src/app/services/auth.service';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
-import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 
 @Component({
   selector: 'app-login',
@@ -12,13 +11,22 @@ import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 })
 export class LoginComponent implements OnInit {
   loginForm:FormGroup;
+  businessForm:FormGroup;
   customerLoginForm:FormGroup;
+  isCustomerLoggedIn:boolean = false;
   customerPwdForm:FormGroup;
-  arePlansAvailable:boolean = false;
-  modalRef?: BsModalRef;
-  constructor(public authService: AuthService,public bizService:BusinessService,public fb:FormBuilder,public router:Router,private modalService: BsModalService) {
+  bizLoginRegisterToggle:boolean = true;
+
+  constructor(public authService: AuthService,public bizService:BusinessService,public fb:FormBuilder,public router:Router) {
     this.loginForm = this.fb.group({
       primaryMobile:[''],
+      password:['']
+    })
+
+    this.businessForm = this.fb.group({
+      businessName:[''],
+      primaryMobile:[''],
+      email:[''],
       password:['']
     })
 
@@ -34,18 +42,17 @@ export class LoginComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  toggleLoginRegister(){
+    this.bizLoginRegisterToggle = !this.bizLoginRegisterToggle;
+  }
+
   businessLogin(){
     this.authService.businessLogin(this.loginForm.value).subscribe((res:any)=>{
       if(res.length){
         alert('login successful');
         window.localStorage.setItem('currentBusiness',JSON.stringify(res[0]));
         this.authService.currentBusiness = res[0];
-        if(this.arePlansAvailable){
-          this.router.navigate(['/dashboard']);
-        }
-        else{
-          this.router.navigate(['/addPlans']);
-        }
+          this.router.navigate(['/business-dashboard']);
       }
       else{
         alert("Invalid credentials")
@@ -53,16 +60,24 @@ export class LoginComponent implements OnInit {
     })
   }
 
-  customerLogin(modaltemplate:TemplateRef<any>){
+  registerBusiness(){
+    this.authService.registerBusiness(this.businessForm.value).subscribe((res)=>{
+      alert(`${res} added successfully`);
+      this.router.navigate(['/login'])
+    })
+  }
+
+  customerLogin(){
     this.authService.customerLogin(this.customerLoginForm.value).subscribe((res:any)=>{
       if(res.length){
         alert('login successful');
-        this.modalRef?.hide();
         if(!res[0].password){
-          this.modalRef = this.modalService.show(modaltemplate);
+          this.isCustomerLoggedIn = true;
         }
         else{
-          this.router.navigate(['/'])
+          window.localStorage.setItem('currentCustomer',JSON.stringify(res[0]));
+        this.authService.currentCustomer = res[0];
+          this.router.navigate(['/customer-dashboard']);
         }
       }
       else{
@@ -72,14 +87,11 @@ export class LoginComponent implements OnInit {
   }
 
   createPassword(){
-    this.bizService.createPwdForCustomer(this.customerLoginForm.value.mobile,this.customerPwdForm.value).subscribe((res)=>{
+    this.bizService.createPwdForCustomer(this.customerLoginForm.value.mobile,this.customerPwdForm.value).subscribe((res:any)=>{
       alert('Password added successfully');
-      this.modalService.hide();
+      window.localStorage.setItem('currentCustomer',JSON.stringify(res[0]));
+        this.authService.currentCustomer = res;
+      this.router.navigate(['/customer-dashboard']);
     })
   }
-
-  openModal(template: TemplateRef<any>) {
-    this.modalRef = this.modalService.show(template);
-  }
-
 }
