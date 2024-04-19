@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from 'src/app/services/auth.service';
 import { CustomerService } from 'src/app/services/customer.service';
+import * as XLSX from 'xlsx';
 
 @Component({
   selector: 'app-customer-transactions',
@@ -35,6 +36,16 @@ export class CustomerTransactionsComponent implements OnInit {
         );
       }
     );
+  }
+
+  downloadSheet(bill:any) {
+    bill.date = new Date(bill.date)
+    bill.availedServices = bill.availedServices.join(",");
+    const worksheet = XLSX.utils.json_to_sheet([bill]);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
+    XLSX.writeFile(workbook, 'Batch34.xlsx', { bookType: 'xlsx', type: 'array' });
+
   }
 
 }
