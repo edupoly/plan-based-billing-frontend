@@ -29,7 +29,7 @@ export class BusinessDashboardComponent implements OnInit {
     if(logoutConfirm){
       this.authService.currentBusiness = null;
     window.localStorage.clear();
-    this.router.navigate(['/login']);
+    this.router.navigate(['']);
     }
   }
 

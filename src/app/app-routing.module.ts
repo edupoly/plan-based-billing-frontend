@@ -19,7 +19,7 @@ import { CustomerUpdateDetailsComponent } from './components/customer-update-det
 const routes: Routes = [
   {
     path:"",
-    component:LoginComponent
+    component:HomeComponent
   },
   {
     path:"login",
