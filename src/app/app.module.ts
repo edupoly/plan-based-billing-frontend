@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { GoogleAuthProvider } from 'firebase/auth';
 import {HttpClientModule} from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -52,7 +51,7 @@ import { CustomerDetailsComponent } from './components/customer-details/customer
     ModalModule.forRoot(),
     BsDatepickerModule.forRoot()
   ],
-  providers: [GoogleAuthProvider],
+  providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -17,6 +17,8 @@ import { CustomerService } from 'src/app/services/customer.service';
 export class CustomerUpdateDetailsComponent implements OnInit {
   currentCustomer: any;
   customerUpdateForm: FormGroup;
+  loading:boolean = false;
+
   constructor(
     public authService: AuthService,
     public fb: FormBuilder,
@@ -57,6 +59,7 @@ export class CustomerUpdateDetailsComponent implements OnInit {
   }
 
   updateCustomerDetails() {
+    this.loading = true;
     this.custService
       .updateCustomer(
         this.currentCustomer.mobile,
@@ -73,6 +76,7 @@ export class CustomerUpdateDetailsComponent implements OnInit {
     this.authService
       .customerLogin({ mobile: this.currentCustomer.mobile })
       .subscribe((res: any) => {
+        this.loading = false;
         if (res.length) {
           window.localStorage.setItem(
             'currentCustomer',

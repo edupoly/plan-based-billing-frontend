@@ -16,7 +16,7 @@ export class LoginComponent implements OnInit {
   isCustomerLoggedIn:boolean = false;
   customerPwdForm:FormGroup;
   bizLoginRegisterToggle:boolean = true;
-
+  loading:boolean = false;
   constructor(public authService: AuthService,public bizService:BusinessService,public fb:FormBuilder,public router:Router) {
     this.loginForm = this.fb.group({
       primaryMobile:[''],
@@ -47,7 +47,9 @@ export class LoginComponent implements OnInit {
   }
 
   businessLogin(){
+    this.loading = true;
     this.authService.businessLogin(this.loginForm.value).subscribe((res:any)=>{
+      this.loading = false;
       if(res.length){
         alert('login successful');
         window.localStorage.setItem('currentBusiness',JSON.stringify(res[0]));
@@ -61,16 +63,19 @@ export class LoginComponent implements OnInit {
   }
 
   registerBusiness(){
+    this.loading = true;
     this.authService.registerBusiness(this.businessForm.value).subscribe((res)=>{
+      this.loading = false;
       alert(`${res} added successfully`);
       this.router.navigate(['/login'])
     })
   }
 
   customerLogin(){
+    this.loading = true;
     this.authService.customerLogin(this.customerLoginForm.value).subscribe((res:any)=>{
+      this.loading = false;
       if(res.length){
-        alert('login successful');
         if(!res[0].password){
           this.isCustomerLoggedIn = true;
         }
@@ -87,7 +92,9 @@ export class LoginComponent implements OnInit {
   }
 
   createPassword(){
+    this.loading = true;
     this.bizService.createPwdForCustomer(this.customerLoginForm.value.mobile,this.customerPwdForm.value).subscribe((res:any)=>{
+      this.loading = false;
       alert('Password added successfully');
       window.localStorage.setItem('currentCustomer',JSON.stringify(res[0]));
         this.authService.currentCustomer = res;

@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from 'src/app/services/auth.service';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { BusinessService } from 'src/app/services/business.service';
 @Component({
   selector: 'app-transactions',
@@ -11,7 +10,7 @@ export class TransactionsComponent implements OnInit {
   currentBusiness: any;
   filteredTransactions: any = [];
   allTransactions:any = [];
-  constructor(public authService: AuthService,public fb: FormBuilder,public bizService: BusinessService,) { }
+  constructor(public authService: AuthService,public bizService: BusinessService,) { }
 
   ngOnInit(): void {
     this.currentBusiness = this.authService.currentBusiness;

@@ -1,4 +1,4 @@
-<div class="login">
+<div class="login" *ngIf="!loading">
   <div class="row p-3">
     <div class="biz-login col-12 col-sm-6 border-end border-primary border-3">
       <div *ngIf="bizLoginRegisterToggle">
@@ -37,4 +37,9 @@
       <button *ngIf="isCustomerLoggedIn" class="btn btn-primary" (click)="createPassword()">Save password</button>
     </div>
   </div>
+</div>
+<div *ngIf="loading" class="loader-container bg-white d-flex flex-column justify-content-center align-items-center bg-opacity-50">
+  <div class="page-loader">
+  </div>
+  <span class="mt-2 text-primary-emphasis">Loading...</span>
 </div>

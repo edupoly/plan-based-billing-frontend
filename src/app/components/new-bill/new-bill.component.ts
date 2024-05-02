@@ -8,6 +8,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { BusinessService } from 'src/app/services/business.service';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-new-bill',
@@ -23,7 +24,7 @@ export class NewBillComponent implements OnInit {
   currentCustomerPlan: any = null;
   totalPrice: number = 0;
   finalPrice: number = 0;
-
+  loading:boolean = false;
   constructor(
     public authService: AuthService,
     public fb: FormBuilder,
@@ -43,6 +44,7 @@ export class NewBillComponent implements OnInit {
   }
 
   getCustomerDetails() {
+    this.loading = true;
     this.bizService
       .fetchCustomerDetails(
         this.currentBusiness._id,
@@ -51,20 +53,22 @@ export class NewBillComponent implements OnInit {
       .subscribe((res: any) => {
         if (res[0].customers.length) {
           this.customerDetails = res[0].customers[0];
-          this.bizService
-            .fetchAllServices(this.currentBusiness._id)
-            .subscribe((services: any) => {
+          const fetchServices = this.bizService.fetchAllServices(
+            this.currentBusiness._id
+          );
+          const fetchCustomerPlan = this.bizService.fetchCustomerPlan(
+            this.currentBusiness._id,
+            this.customerDetails.plan
+          );
+          forkJoin([fetchServices, fetchCustomerPlan]).subscribe(
+            ([services, customerPlan]:any) => {
               this.allServices = services[0].services;
-            });
-          this.bizService
-            .fetchCustomerPlan(
-              this.currentBusiness._id,
-              this.customerDetails.plan
-            )
-            .subscribe((res: any) => {
-              this.currentCustomerPlan = res[0].plans[0];
-            });
+              this.currentCustomerPlan = customerPlan[0].plans[0];
+              this.loading = false;
+            }
+          );
         } else {
+          this.loading = false;
           alert('No customers found with this mobile number');
         }
       });
@@ -102,6 +106,7 @@ export class NewBillComponent implements OnInit {
   }
 
   generateInvoice() {
+    this.loading = true;
     let generatedInvoice: any = {};
     generatedInvoice.date = new Date().getTime();
     generatedInvoice.customerMobile = this.customerDetails.mobile;
@@ -127,6 +132,7 @@ export class NewBillComponent implements OnInit {
     this.authService
       .businessLogin(this.currentBusiness)
       .subscribe((res: any) => {
+        this.loading = false;
         if (res.length) {
           window.localStorage.setItem(
             'currentBusiness',
@@ -139,3 +145,19 @@ export class NewBillComponent implements OnInit {
       });
   }
 }
+
+
+
+/* this.bizService
+            .fetchAllServices(this.currentBusiness._id)
+            .subscribe((services: any) => {
+              this.allServices = services[0].services;
+            });
+          this.bizService
+            .fetchCustomerPlan(
+              this.currentBusiness._id,
+              this.customerDetails.plan
+            )
+            .subscribe((res: any) => {
+              this.currentCustomerPlan = res[0].plans[0];
+            }); */

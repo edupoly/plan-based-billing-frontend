@@ -15,6 +15,7 @@ export class ServicesComponent implements OnInit {
   updateServiceForm:FormGroup;
   serviceToBeUpdated:any = null;
   modalRef?: BsModalRef;
+  loading:boolean = false;
   constructor(public authService: AuthService,public fb: FormBuilder,public bizService: BusinessService,private modalService: BsModalService) {
     this.addServiceForm = this.fb.group({
       services: this.fb.array([])
@@ -47,6 +48,7 @@ export class ServicesComponent implements OnInit {
   }
 
   saveServices() {
+    this.loading = true;
     this.bizService
       .updateServices(this.currentBusiness._id, this.addServiceForm.value)
       .subscribe((res) => {
@@ -65,6 +67,7 @@ export class ServicesComponent implements OnInit {
   }
 
   updateService(){
+    this.loading = true;
     this.bizService.updateServiceByTitle(this.currentBusiness._id,this.serviceToBeUpdated.title,this.updateServiceForm.value).subscribe((res)=>{
       this.closeUpdateServiceModal();
       this.getUpdatedBusiness();
@@ -82,6 +85,7 @@ export class ServicesComponent implements OnInit {
       'Are you sure you want to delete this service?'
     );
     if (delConfirm) {
+      this.loading = true;
       this.bizService
         .deleteServiceByTitle(this.currentBusiness._id, title)
         .subscribe((res) => {
@@ -94,6 +98,7 @@ export class ServicesComponent implements OnInit {
     this.authService
       .businessLogin(this.currentBusiness)
       .subscribe((res: any) => {
+        this.loading = false;
         if (res.length) {
           window.localStorage.setItem(
             'currentBusiness',

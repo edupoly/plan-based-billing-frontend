@@ -12,6 +12,7 @@ export class CustomersComponent implements OnInit {
   currentBusiness: any;
   showCustomerForm:boolean = false;
   customerForm: FormGroup;
+  loading:boolean = false;
   constructor(public authService: AuthService,public fb: FormBuilder,public bizService: BusinessService,) {
     this.customerForm = this.fb.group({
       mobile: ['',Validators.required],
@@ -28,6 +29,7 @@ export class CustomersComponent implements OnInit {
   }
 
   saveCustomer() {
+    this.loading = true;
     this.bizService
       .addCustomer(this.customerForm.value, this.currentBusiness._id)
       .subscribe((res) => {
@@ -42,6 +44,7 @@ export class CustomersComponent implements OnInit {
     this.authService
       .businessLogin(this.currentBusiness)
       .subscribe((res: any) => {
+        this.loading = false;
         if (res.length) {
           window.localStorage.setItem(
             'currentBusiness',

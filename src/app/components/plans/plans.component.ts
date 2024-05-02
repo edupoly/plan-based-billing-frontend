@@ -15,6 +15,7 @@ export class PlansComponent implements OnInit {
   updatePlanForm: FormGroup;
   planToBeUpdated: any = null;
   modalRef?: BsModalRef;
+  loading:boolean = false;
   constructor(
     public authService: AuthService,
     public fb: FormBuilder,
@@ -55,6 +56,7 @@ export class PlansComponent implements OnInit {
   }
 
   savePlans() {
+    this.loading = true;
     this.bizService
       .updatePlans(this.currentBusiness._id, this.plansForm.value)
       .subscribe((res) => {
@@ -74,6 +76,7 @@ export class PlansComponent implements OnInit {
   }
 
   updatePlan() {
+    this.loading = true;
     this.bizService
       .updatePlanByTitle(
         this.currentBusiness._id,
@@ -97,6 +100,7 @@ export class PlansComponent implements OnInit {
       'Are you sure you want to delete this plan?'
     );
     if (delConfirm) {
+      this.loading = true;
       this.bizService
         .deletePlanByTitle(this.currentBusiness._id, title)
         .subscribe((res) => {
@@ -109,6 +113,7 @@ export class PlansComponent implements OnInit {
     this.authService
       .businessLogin(this.currentBusiness)
       .subscribe((res: any) => {
+        this.loading = false;
         if (res.length) {
           window.localStorage.setItem(
             'currentBusiness',

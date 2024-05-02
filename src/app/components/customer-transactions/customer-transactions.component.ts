@@ -12,6 +12,7 @@ export class CustomerTransactionsComponent implements OnInit {
   currentCustomer: any;
   allTransactions:any = [];
   filteredTransactions:any = [];
+  loading:boolean = false;
   constructor(public authService: AuthService,public custService:CustomerService) { }
 
   ngOnInit(): void {
@@ -20,7 +21,9 @@ export class CustomerTransactionsComponent implements OnInit {
   }
 
   getAllTransactions(){
+    this.loading = true;
     this.custService.fetchCustomerTransactions(this.currentCustomer.mobile).subscribe((res)=>{
+      this.loading = false;
       this.filteredTransactions = this.allTransactions = res;
     })
   }
@@ -44,8 +47,7 @@ export class CustomerTransactionsComponent implements OnInit {
     const worksheet = XLSX.utils.json_to_sheet([bill]);
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
-    XLSX.writeFile(workbook, 'Batch34.xlsx', { bookType: 'xlsx', type: 'array' });
-
+    XLSX.writeFile(workbook, 'invoice.xlsx', { bookType: 'xlsx', type: 'array' });
   }
 
 }
