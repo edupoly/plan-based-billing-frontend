@@ -1,18 +1,19 @@
-<h2>Transactions</h2>
+<h2 class="text-center">Transactions</h2>
 <div *ngIf="!allTransactions.length">
-    <h3>No transactions to display</h3>
+    <h3 class="text-center">No transactions to display</h3>
 </div>
 <div *ngIf="allTransactions.length">
-    <div class="col-xs-12 col-12 col-md-4 form-group mb-3">
-        <input type="text" placeholder="Please select start date and end date" class="form-control" bsDaterangepicker
-            (bsValueChange)="handleDateChange($event)">
+    <div class="d-flex justify-content-center">
+        <div class="col-xs-12 col-12 col-md-4 form-group mb-3">
+            <input type="text" placeholder="Please select start date and end date" class="form-control" bsDaterangepicker
+                (bsValueChange)="handleDateChange($event)">
+        </div>
     </div>
     <div *ngIf="!filteredTransactions.length">
         <h3>No transactions in this date range.Please select a different date range</h3>
     </div>
-    <div *ngIf="filteredTransactions.length">
-
-        <table class="table table-bordered">
+    <div *ngIf="filteredTransactions.length" class="container">
+        <table class="table table-bordered text-center">
             <tr>
                 <th>Date</th>
                 <th>Mobile</th>
